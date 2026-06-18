@@ -36,7 +36,7 @@ function init() {
   controls.enableDamping = true;              // 启用阻尼（惯性），使控制更平滑
   controls.dampingFactor = 0.05;              // 阻尼系数，值越小惯性越大
   controls.autoRotate = true;                 // 自动旋转
-  controls.autoRotateSpeed = 0.15;             // 自动旋转速度
+  controls.autoRotateSpeed = 0.1;             // 自动旋转速度
   controls.minDistance = 100;                 // 最小缩放距离
   controls.maxDistance = 2000;                // 最大缩放距离
 
@@ -151,25 +151,24 @@ function onMouseMove(event) {
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(sprites);
 
-  // 恢复之前悬停的精灵
-  if (hoveredSprite) {
-    const originalScale = hoveredSprite.userData.originalScale;
-    
-    hoveredSprite.scale.x = originalScale.x;
-    hoveredSprite.scale.y = originalScale.y;
-    hoveredSprite.scale.z = originalScale.z;
-    hoveredSprite.material.opacity = 0.85;
-  }
-
-  // 应用缩放+透明度效果到当前悬停的精灵
+  // 检测当前悬停的精灵
   if (intersects.length > 0) {
     const newHovered = intersects[0].object;
 
-    // 只在悬停对象改变时才执行
+    // 如果悬停对象改变了
     if (newHovered !== hoveredSprite) {
+      // 恢复之前悬停的精灵
+      if (hoveredSprite) {
+        const originalScale = hoveredSprite.userData.originalScale;
+        hoveredSprite.scale.x = originalScale.x;
+        hoveredSprite.scale.y = originalScale.y;
+        hoveredSprite.scale.z = originalScale.z;
+        hoveredSprite.material.opacity = 0.85;
+      }
+
+      // 放大新悬停的精灵
       hoveredSprite = newHovered;
       const originalScale = hoveredSprite.userData.originalScale;
-
       hoveredSprite.scale.x = originalScale.x * 1.2;
       hoveredSprite.scale.y = originalScale.y * 1.2;
       hoveredSprite.scale.z = originalScale.z * 1.2;
@@ -177,12 +176,19 @@ function onMouseMove(event) {
     }
 
     document.body.style.cursor = 'pointer';
-    // 停止自动旋转
     controls.autoRotate = false;
   } else {
+    // 鼠标离开所有精灵，恢复之前悬停的精灵
+    if (hoveredSprite) {
+      const originalScale = hoveredSprite.userData.originalScale;
+      hoveredSprite.scale.x = originalScale.x;
+      hoveredSprite.scale.y = originalScale.y;
+      hoveredSprite.scale.z = originalScale.z;
+      hoveredSprite.material.opacity = 0.85;
+    }
+    
     hoveredSprite = null;
     document.body.style.cursor = 'default';
-    // 恢复自动旋转
     controls.autoRotate = true;
   }
 }
