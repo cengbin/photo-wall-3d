@@ -23,7 +23,7 @@ function init() {
 
   // 相机
   camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 2, 2000);
-  camera.position.z = 1000;
+  camera.position.z = 3000;
 
   // 渲染器
   renderer = new THREE.WebGLRenderer({antialias: true});
@@ -38,7 +38,7 @@ function init() {
   controls.autoRotate = true;                 // 自动旋转
   controls.autoRotateSpeed = 0.1;             // 自动旋转速度
   controls.minDistance = 100;                 // 最小缩放距离
-  controls.maxDistance = 2000;                // 最大缩放距离
+  controls.maxDistance = 3000;                // 最大缩放距离
 
   // 加载所有图片纹理
   const textureLoader = new THREE.TextureLoader();
@@ -75,6 +75,9 @@ function init() {
   // 添加辅助工具
   addHelpers();
 
+  // 创建宇宙星空背景
+  createStarField();
+
   // 初始化射线投射器和鼠标向量
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
@@ -87,12 +90,168 @@ function init() {
 
 function addHelpers() {
   // 坐标轴辅助器 (红色=X轴, 绿色=Y轴, 蓝色=Z轴)
-  const axesHelper = new THREE.AxesHelper(1000);
+  const axesHelper = new THREE.AxesHelper(10000);
   scene.add(axesHelper);
 
   // 网格辅助器 (地面网格)
   const gridHelper = new THREE.GridHelper(2000, 20, 0x444444, 0x222222);
   scene.add(gridHelper);
+}
+
+function createStarField() {
+  // 创建扁平椭圆星系效果
+  const totalParticles = 100000;
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(totalParticles * 3);
+  const colors = new Float32Array(totalParticles * 3);
+  const sizes = new Float32Array(totalParticles);
+
+  for (let i = 0; i < totalParticles; i++) {
+    const i3 = i * 3;
+    
+    // 使用指数分布，中心密集
+    const radiusRandom = Math.pow(Math.random(), 0.3);
+    const radius = radiusRandom * 2500;
+    
+    // 水平角度
+    const theta = Math.random() * Math.PI * 2;
+    
+    // 垂直扁平化：y 轴压缩，形成盘状
+    const flatness = 0.15; // 扁平度
+    const y = (Math.random() - 0.5) * radius * flatness;
+    
+    // 椭圆形状：x 和 z 方向
+    const x = radius * Math.cos(theta);
+    const z = radius * Math.sin(theta);
+    
+    positions[i3] = x;
+    positions[i3 + 1] = y;
+    positions[i3 + 2] = z;
+    
+    // 根据距离中心的距离决定颜色和亮度
+    const distanceFromCenter = Math.sqrt(x * x + y * y + z * z);
+    const normalizedDistance = distanceFromCenter / 2500;
+    
+    // 颜色分层：中心白色 -> 绿色 -> 红色 -> 暗淡
+    let r, g, b, size, opacity;
+    
+    if (normalizedDistance < 0.15) {
+      // 中心区域：明亮的白色
+      const intensity = 1.0 - normalizedDistance / 0.15 * 0.3;
+      r = intensity;
+      g = intensity;
+      b = intensity;
+      size = 3 + Math.random() * 4;
+      opacity = 0.8 + Math.random() * 0.2;
+    } else if (normalizedDistance < 0.35) {
+      // 内环：黄白色过渡
+      const t = (normalizedDistance - 0.15) / 0.2;
+      const intensity = 0.9 - t * 0.2;
+      r = intensity;
+      g = intensity * 0.95;
+      b = intensity * 0.85;
+      size = 2 + Math.random() * 3;
+      opacity = 0.7 + Math.random() * 0.2;
+    } else if (normalizedDistance < 0.55) {
+      // 中环：绿色区域
+      const t = (normalizedDistance - 0.35) / 0.2;
+      const intensity = 0.8 - t * 0.3;
+      r = intensity * 0.3;
+      g = intensity;
+      b = intensity * 0.6;
+      size = 2 + Math.random() * 3;
+      opacity = 0.5 + Math.random() * 0.3;
+    } else if (normalizedDistance < 0.8) {
+      // 外环：红色/橙色区域
+      const t = (normalizedDistance - 0.55) / 0.25;
+      const intensity = 0.7 - t * 0.3;
+      r = intensity;
+      g = intensity * 0.4;
+      b = intensity * 0.2;
+      size = 1.5 + Math.random() * 2.5;
+      opacity = 0.4 + Math.random() * 0.3;
+    } else {
+      // 最外层：暗淡的红色和零星星星
+      const t = (normalizedDistance - 0.8) / 0.2;
+      const intensity = 0.5 - t * 0.3;
+      
+      if (Math.random() < 0.3) {
+        // 零星的小星星
+        r = 0.8;
+        g = 0.8;
+        b = 0.8;
+        size = 0.5 + Math.random();
+        opacity = 0.6;
+      } else {
+        // 暗淡的红色
+        r = intensity * 0.8;
+        g = intensity * 0.3;
+        b = intensity * 0.2;
+        size = 1 + Math.random() * 2;
+        opacity = 0.3 + Math.random() * 0.2;
+      }
+    }
+    
+    colors[i3] = r;
+    colors[i3 + 1] = g;
+    colors[i3 + 2] = b;
+    sizes[i] = size;
+  }
+
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+  const material = new THREE.PointsMaterial({
+    size: 2,
+    vertexColors: true,
+    transparent: true,
+    opacity: 1,
+    sizeAttenuation: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const galaxy = new THREE.Points(geometry, material);
+  scene.add(galaxy);
+  
+  // 添加额外的背景星星
+  const bgStarCount = 3000;
+  const bgGeometry = new THREE.BufferGeometry();
+  const bgPositions = new Float32Array(bgStarCount * 3);
+  const bgColors = new Float32Array(bgStarCount * 3);
+  
+  for (let i = 0; i < bgStarCount; i++) {
+    const i3 = i * 3;
+    const radius = 2000 + Math.random() * 1500;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    
+    bgPositions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+    bgPositions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+    bgPositions[i3 + 2] = radius * Math.cos(phi);
+    
+    const brightness = 0.5 + Math.random() * 0.5;
+    bgColors[i3] = brightness;
+    bgColors[i3 + 1] = brightness;
+    bgColors[i3 + 2] = brightness;
+  }
+  
+  bgGeometry.setAttribute('position', new THREE.BufferAttribute(bgPositions, 3));
+  bgGeometry.setAttribute('color', new THREE.BufferAttribute(bgColors, 3));
+  
+  const bgMaterial = new THREE.PointsMaterial({
+    size: 1,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.6,
+    sizeAttenuation: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  
+  const bgStars = new THREE.Points(bgGeometry, bgMaterial);
+  scene.add(bgStars);
 }
 
 function createParticles() {
