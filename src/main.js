@@ -4,7 +4,7 @@ import gsap from 'gsap';
 
 const imageFiles = Array.from({length: 64}, (_, i) => `${i + 1}.png`);
 
-const PARTICLE_COUNT = 1000;
+const PARTICLE_COUNT = 1500;
 
 let scene, camera, renderer, controls;
 let sprites = [];
@@ -116,10 +116,21 @@ function createParticles() {
     // 创建精灵
     const sprite = new THREE.Sprite(material);
 
-    // 随机位置（类似示例的分布）
-    sprite.position.x = Math.random() * 2000 - 1000;
-    sprite.position.y = Math.random() * 2000 - 1000;
-    sprite.position.z = Math.random() * 2000 - 1000;
+    // 球体分布：中心密集，边缘稀疏
+    const sphereRadius = 1000; // 球体半径
+    
+    // 使用平方根分布，使中心密集
+    // Math.random() 的平方根会产生更多接近0的值
+    const radius = sphereRadius * Math.pow(Math.random(), 0.5);
+    
+    // 随机球面方向（均匀分布）
+    const theta = Math.random() * Math.PI * 2; // 水平角度 0-2π
+    const phi = Math.acos(2 * Math.random() - 1); // 垂直角度，均匀分布在球面
+    
+    // 球坐标转笛卡尔坐标
+    sprite.position.x = radius * Math.sin(phi) * Math.cos(theta);
+    sprite.position.y = radius * Math.sin(phi) * Math.sin(theta);
+    sprite.position.z = radius * Math.cos(phi);
 
     // 随机大小，按纹理原始比例缩放
     const baseSize = 15 + Math.random() * 25;
