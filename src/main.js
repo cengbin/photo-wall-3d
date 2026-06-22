@@ -9,6 +9,7 @@ let sprites = [];
 let textures = [];
 let raycaster, mouse;
 let hoveredSprite = null;
+let clickedSprite = null;
 let imagesData = null;
 
 // 创建发光点纹理
@@ -60,7 +61,7 @@ function init() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;              // 启用阻尼（惯性），使控制更平滑
   controls.dampingFactor = 0.05;              // 阻尼系数，值越小惯性越大
-  // controls.autoRotate = true;                 // 自动旋转
+  controls.autoRotate = true;                 // 自动旋转
   controls.autoRotateSpeed = 0.1;             // 自动旋转速度
   controls.minDistance = 100;                 // 最小缩放距离
   controls.maxDistance = 3000;                // 最大缩放距离
@@ -438,8 +439,8 @@ function onMouseMove(event) {
 
     // 如果悬停对象改变了
     if (newHovered !== hoveredSprite) {
-      // 恢复之前悬停的精灵
-      if (hoveredSprite) {
+      // 恢复之前悬停的精灵（跳过当前点击的精灵）
+      if (hoveredSprite && hoveredSprite !== clickedSprite) {
         hoveredSprite.material.opacity = 0.85;
         
         // 隐藏边框线
@@ -463,8 +464,8 @@ function onMouseMove(event) {
     document.body.style.cursor = 'pointer';
     // controls.autoRotate = false;
   } else {
-    // 鼠标离开所有精灵，恢复之前悬停的精灵
-    if (hoveredSprite) {
+    // 鼠标离开所有精灵，恢复之前悬停的精灵（跳过当前点击的精灵）
+    if (hoveredSprite && hoveredSprite !== clickedSprite) {
       hoveredSprite.material.opacity = 0.85;
       
       // 隐藏边框线
@@ -489,7 +490,26 @@ function onMouseClick(event) {
   const intersects = raycaster.intersectObjects(sprites);
 
   if (intersects.length > 0) {
-    const clickedSprite = intersects[0].object;
+    const newClicked = intersects[0].object;
+
+    // 恢复之前点击的精灵
+    if (clickedSprite && clickedSprite !== newClicked) {
+      clickedSprite.material.opacity = 0.85;
+      if (clickedSprite.userData.borderLine) {
+        clickedSprite.userData.borderLine.material.opacity = 0;
+      }
+    }
+
+    // 设置新点击的精灵
+    clickedSprite = newClicked;
+    clickedSprite.material.opacity = 1.0;
+    if (clickedSprite.userData.borderLine) {
+      clickedSprite.userData.borderLine.position.copy(clickedSprite.position);
+      clickedSprite.userData.borderLine.material.opacity = 1.0;
+    }
+
+    // 停止自动旋转
+    controls.autoRotate = false;
 
     // 计算相机目标位置：从场景中心(0,0,0)指向照片的方向，延伸到照片位置再往外200单位
     const sceneCenter = new THREE.Vector3(0, 0, 0);
@@ -527,6 +547,24 @@ function animateCameraTo(targetPosition) {
       // 动画完成后，更新 controls 的 target 为场景中心并重新启用
       controls.target.copy(sceneCenter);
       controls.enabled = true;
+      
+      // 监听用户主动操作控制器时，恢复点击的精灵和自动旋转
+      const resetClicked = () => {
+        if (clickedSprite) {
+          clickedSprite.material.opacity = 0.85;
+          if (clickedSprite.userData.borderLine) {
+            clickedSprite.userData.borderLine.material.opacity = 0;
+          }
+          clickedSprite = null;
+        }
+        controls.autoRotate = true;
+        renderer.domElement.removeEventListener('mousedown', resetClicked);
+        renderer.domElement.removeEventListener('wheel', resetClicked);
+        renderer.domElement.removeEventListener('touchstart', resetClicked);
+      };
+      renderer.domElement.addEventListener('mousedown', resetClicked);
+      renderer.domElement.addEventListener('wheel', resetClicked);
+      renderer.domElement.addEventListener('touchstart', resetClicked);
     }
   });
 }
@@ -537,6 +575,9 @@ function animate() {
   // 更新边框线朝向，使其始终面向相机
   if (hoveredSprite && hoveredSprite.userData.borderLine) {
     hoveredSprite.userData.borderLine.quaternion.copy(camera.quaternion);
+  }
+  if (clickedSprite && clickedSprite.userData.borderLine) {
+    clickedSprite.userData.borderLine.quaternion.copy(camera.quaternion);
   }
 
   controls.update();
