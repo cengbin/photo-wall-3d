@@ -35,7 +35,7 @@ function init() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;              // 启用阻尼（惯性），使控制更平滑
   controls.dampingFactor = 0.05;              // 阻尼系数，值越小惯性越大
-  controls.autoRotate = true;                 // 自动旋转
+  // controls.autoRotate = true;                 // 自动旋转
   controls.autoRotateSpeed = 0.1;             // 自动旋转速度
   controls.minDistance = 100;                 // 最小缩放距离
   controls.maxDistance = 3000;                // 最大缩放距离
@@ -93,8 +93,8 @@ function addHelpers() {
   const axesHelper = new THREE.AxesHelper(10000);
   scene.add(axesHelper);
 
-  // 网格辅助器 (地面网格)
-  const gridHelper = new THREE.GridHelper(2000, 20, 0x444444, 0x222222);
+  // 网格辅助器 (地面网格 - 红色)
+  const gridHelper = new THREE.GridHelper(2000, 20, 0xff0000, 0x880000);
   scene.add(gridHelper);
 }
 
@@ -132,64 +132,79 @@ function createStarField() {
     const distanceFromCenter = Math.sqrt(x * x + y * y + z * z);
     const normalizedDistance = distanceFromCenter / 2500;
     
-    // 颜色分层：中心白色 -> 绿色 -> 红色 -> 暗淡
+    // 五颜六色的彩色效果
     let r, g, b, size, opacity;
     
-    if (normalizedDistance < 0.15) {
-      // 中心区域：明亮的白色
-      const intensity = 1.0 - normalizedDistance / 0.15 * 0.3;
+    // 随机选择颜色类型
+    const colorType = Math.random();
+    const intensity = 0.7 + Math.random() * 0.3;
+    
+    if (colorType < 0.14) {
+      // 红色
       r = intensity;
+      g = intensity * 0.2;
+      b = intensity * 0.2;
+    } else if (colorType < 0.28) {
+      // 橙色
+      r = intensity;
+      g = intensity * 0.6;
+      b = intensity * 0.1;
+    } else if (colorType < 0.42) {
+      // 黄色
+      r = intensity;
+      g = intensity * 0.9;
+      b = intensity * 0.2;
+    } else if (colorType < 0.56) {
+      // 绿色
+      r = intensity * 0.2;
       g = intensity;
+      b = intensity * 0.3;
+    } else if (colorType < 0.70) {
+      // 青色
+      r = intensity * 0.2;
+      g = intensity * 0.8;
       b = intensity;
+    } else if (colorType < 0.84) {
+      // 蓝色
+      r = intensity * 0.2;
+      g = intensity * 0.3;
+      b = intensity;
+    } else {
+      // 紫色/粉色
+      r = intensity * 0.9;
+      g = intensity * 0.3;
+      b = intensity;
+    }
+    
+    // 根据距离调整亮度和大小
+    if (normalizedDistance < 0.2) {
+      // 中心区域：更亮更大
+      const brightnessFactor = 1.2 - normalizedDistance;
+      r *= brightnessFactor;
+      g *= brightnessFactor;
+      b *= brightnessFactor;
       size = 3 + Math.random() * 4;
       opacity = 0.8 + Math.random() * 0.2;
-    } else if (normalizedDistance < 0.35) {
-      // 内环：黄白色过渡
-      const t = (normalizedDistance - 0.15) / 0.2;
-      const intensity = 0.9 - t * 0.2;
-      r = intensity;
-      g = intensity * 0.95;
-      b = intensity * 0.85;
+    } else if (normalizedDistance < 0.5) {
+      // 中间区域
       size = 2 + Math.random() * 3;
-      opacity = 0.7 + Math.random() * 0.2;
-    } else if (normalizedDistance < 0.55) {
-      // 中环：绿色区域
-      const t = (normalizedDistance - 0.35) / 0.2;
-      const intensity = 0.8 - t * 0.3;
-      r = intensity * 0.3;
-      g = intensity;
-      b = intensity * 0.6;
-      size = 2 + Math.random() * 3;
-      opacity = 0.5 + Math.random() * 0.3;
+      opacity = 0.6 + Math.random() * 0.3;
     } else if (normalizedDistance < 0.8) {
-      // 外环：红色/橙色区域
-      const t = (normalizedDistance - 0.55) / 0.25;
-      const intensity = 0.7 - t * 0.3;
-      r = intensity;
-      g = intensity * 0.4;
-      b = intensity * 0.2;
+      // 外围区域
+      const dimFactor = 1.0 - (normalizedDistance - 0.5) / 0.3 * 0.4;
+      r *= dimFactor;
+      g *= dimFactor;
+      b *= dimFactor;
       size = 1.5 + Math.random() * 2.5;
-      opacity = 0.4 + Math.random() * 0.3;
+      opacity = 0.5 + Math.random() * 0.3;
     } else {
-      // 最外层：暗淡的红色和零星星星
-      const t = (normalizedDistance - 0.8) / 0.2;
-      const intensity = 0.5 - t * 0.3;
-      
-      if (Math.random() < 0.3) {
-        // 零星的小星星
-        r = 0.8;
-        g = 0.8;
-        b = 0.8;
-        size = 0.5 + Math.random();
-        opacity = 0.6;
-      } else {
-        // 暗淡的红色
-        r = intensity * 0.8;
-        g = intensity * 0.3;
-        b = intensity * 0.2;
-        size = 1 + Math.random() * 2;
-        opacity = 0.3 + Math.random() * 0.2;
-      }
+      // 最外层：更暗
+      const dimFactor = 0.6 - (normalizedDistance - 0.8) / 0.2 * 0.3;
+      r *= dimFactor;
+      g *= dimFactor;
+      b *= dimFactor;
+      size = 1 + Math.random() * 2;
+      opacity = 0.3 + Math.random() * 0.2;
     }
     
     colors[i3] = r;
@@ -231,10 +246,39 @@ function createStarField() {
     bgPositions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
     bgPositions[i3 + 2] = radius * Math.cos(phi);
     
+    // 背景星星也使用彩色
+    const colorType = Math.random();
     const brightness = 0.5 + Math.random() * 0.5;
-    bgColors[i3] = brightness;
-    bgColors[i3 + 1] = brightness;
-    bgColors[i3 + 2] = brightness;
+    
+    if (colorType < 0.14) {
+      bgColors[i3] = brightness;
+      bgColors[i3 + 1] = brightness * 0.3;
+      bgColors[i3 + 2] = brightness * 0.3;
+    } else if (colorType < 0.28) {
+      bgColors[i3] = brightness;
+      bgColors[i3 + 1] = brightness * 0.7;
+      bgColors[i3 + 2] = brightness * 0.2;
+    } else if (colorType < 0.42) {
+      bgColors[i3] = brightness;
+      bgColors[i3 + 1] = brightness * 0.9;
+      bgColors[i3 + 2] = brightness * 0.3;
+    } else if (colorType < 0.56) {
+      bgColors[i3] = brightness * 0.3;
+      bgColors[i3 + 1] = brightness;
+      bgColors[i3 + 2] = brightness * 0.4;
+    } else if (colorType < 0.70) {
+      bgColors[i3] = brightness * 0.3;
+      bgColors[i3 + 1] = brightness * 0.8;
+      bgColors[i3 + 2] = brightness;
+    } else if (colorType < 0.84) {
+      bgColors[i3] = brightness * 0.3;
+      bgColors[i3 + 1] = brightness * 0.4;
+      bgColors[i3 + 2] = brightness;
+    } else {
+      bgColors[i3] = brightness * 0.9;
+      bgColors[i3 + 1] = brightness * 0.4;
+      bgColors[i3 + 2] = brightness;
+    }
   }
   
   bgGeometry.setAttribute('position', new THREE.BufferAttribute(bgPositions, 3));
@@ -346,7 +390,7 @@ function onMouseMove(event) {
     }
 
     document.body.style.cursor = 'pointer';
-    controls.autoRotate = false;
+    // controls.autoRotate = false;
   } else {
     // 鼠标离开所有精灵，恢复之前悬停的精灵
     if (hoveredSprite) {
@@ -359,7 +403,7 @@ function onMouseMove(event) {
     
     hoveredSprite = null;
     document.body.style.cursor = 'default';
-    controls.autoRotate = true;
+    // controls.autoRotate = true;
   }
 }
 
