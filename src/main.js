@@ -49,7 +49,7 @@ function init() {
 
   // 相机
   camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 2, 2000);
-  camera.position.z = 3000;
+  camera.position.z = 2000;
 
   // 渲染器
   renderer = new THREE.WebGLRenderer({antialias: true});
@@ -370,9 +370,34 @@ function createParticles() {
     const aspectRatio = texture.image.width / texture.image.height;
     sprite.scale.set(baseSize * aspectRatio, baseSize, 1);
 
+    // 创建边框线
+    const borderGeometry = new THREE.BufferGeometry();
+    const borderWidth = baseSize * aspectRatio;
+    const borderHeight = baseSize;
+    const borderVertices = new Float32Array([
+      -borderWidth / 2, -borderHeight / 2, 0,
+      borderWidth / 2, -borderHeight / 2, 0,
+      borderWidth / 2, borderHeight / 2, 0,
+      -borderWidth / 2, borderHeight / 2, 0,
+      -borderWidth / 2, -borderHeight / 2, 0
+    ]);
+    borderGeometry.setAttribute('position', new THREE.BufferAttribute(borderVertices, 3));
+    
+    const borderMaterial = new THREE.LineBasicMaterial({
+      color: 0x00ffff,
+      linewidth: 2,
+      transparent: true,
+      opacity: 0
+    });
+    
+    const borderLine = new THREE.Line(borderGeometry, borderMaterial);
+    borderLine.position.copy(sprite.position);
+    scene.add(borderLine);
+
     // 存储原始数据用于交互
     sprite.userData = {
-      originalScale: new THREE.Vector3(baseSize * aspectRatio, baseSize, 1)
+      originalScale: new THREE.Vector3(baseSize * aspectRatio, baseSize, 1),
+      borderLine: borderLine
     };
 
     scene.add(sprite);
@@ -403,20 +428,24 @@ function onMouseMove(event) {
     if (newHovered !== hoveredSprite) {
       // 恢复之前悬停的精灵
       if (hoveredSprite) {
-        const originalScale = hoveredSprite.userData.originalScale;
-        hoveredSprite.scale.x = originalScale.x;
-        hoveredSprite.scale.y = originalScale.y;
-        hoveredSprite.scale.z = originalScale.z;
         hoveredSprite.material.opacity = 0.85;
+        
+        // 隐藏边框线
+        if (hoveredSprite.userData.borderLine) {
+          hoveredSprite.userData.borderLine.material.opacity = 0;
+        }
       }
 
-      // 放大新悬停的精灵
+      // 设置新悬停的精灵
       hoveredSprite = newHovered;
-      const originalScale = hoveredSprite.userData.originalScale;
-      hoveredSprite.scale.x = originalScale.x * 1.2;
-      hoveredSprite.scale.y = originalScale.y * 1.2;
-      hoveredSprite.scale.z = originalScale.z * 1.2;
       hoveredSprite.material.opacity = 1.0;
+      
+      // 显示边框线
+      if (hoveredSprite.userData.borderLine) {
+        const borderLine = hoveredSprite.userData.borderLine;
+        borderLine.position.copy(hoveredSprite.position);
+        borderLine.material.opacity = 1.0;
+      }
     }
 
     document.body.style.cursor = 'pointer';
@@ -424,11 +453,12 @@ function onMouseMove(event) {
   } else {
     // 鼠标离开所有精灵，恢复之前悬停的精灵
     if (hoveredSprite) {
-      const originalScale = hoveredSprite.userData.originalScale;
-      hoveredSprite.scale.x = originalScale.x;
-      hoveredSprite.scale.y = originalScale.y;
-      hoveredSprite.scale.z = originalScale.z;
       hoveredSprite.material.opacity = 0.85;
+      
+      // 隐藏边框线
+      if (hoveredSprite.userData.borderLine) {
+        hoveredSprite.userData.borderLine.material.opacity = 0;
+      }
     }
     
     hoveredSprite = null;
@@ -491,6 +521,11 @@ function animateCameraTo(targetPosition) {
 
 function animate() {
   requestAnimationFrame(animate);
+
+  // 更新边框线朝向，使其始终面向相机
+  if (hoveredSprite && hoveredSprite.userData.borderLine) {
+    hoveredSprite.userData.borderLine.quaternion.copy(camera.quaternion);
+  }
 
   controls.update();
   renderer.render(scene, camera);
