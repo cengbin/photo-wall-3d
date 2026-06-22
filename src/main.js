@@ -2,8 +2,6 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import gsap from 'gsap';
 
-const imageFiles = Array.from({length: 64}, (_, i) => `${i + 1}.png`);
-
 const PARTICLE_COUNT = 1500;
 
 let scene, camera, renderer, controls;
@@ -11,6 +9,7 @@ let sprites = [];
 let textures = [];
 let raycaster, mouse;
 let hoveredSprite = null;
+let imagesData = null;
 
 // 创建发光点纹理
 function createGlowTexture() {
@@ -66,37 +65,48 @@ function init() {
   controls.minDistance = 100;                 // 最小缩放距离
   controls.maxDistance = 3000;                // 最大缩放距离
 
-  // 加载所有图片纹理
-  const textureLoader = new THREE.TextureLoader();
-  const basePath = 'resource/images/';
-  let loadedCount = 0;
+  // 先加载 JSON 文件
+  fetch('resource/images-data.json')
+    .then(response => response.json())
+    .then(data => {
+      imagesData = data;
+      console.log(`加载了 ${imagesData.total} 个图片信息`);
+      
+      // 加载所有图片纹理
+      const textureLoader = new THREE.TextureLoader();
+      let loadedCount = 0;
 
-  imageFiles.forEach((filename, index) => {
-    textureLoader.load(
-      basePath + filename,
-      (texture) => {
-        texture.colorSpace = THREE.SRGBColorSpace;
-        textures[index] = texture;
-        loadedCount++;
+      imagesData.images.forEach((imageInfo, index) => {
+        textureLoader.load(
+          imageInfo.path,
+          (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace;
+            textures[index] = texture;
+            loadedCount++;
 
-        if (loadedCount === imageFiles.length) {
-          createParticles();
-          document.getElementById('loading').classList.add('hidden');
-          animate();
-        }
-      },
-      undefined,
-      (error) => {
-        console.error('Failed to load:', filename, error);
-        loadedCount++;
-        if (loadedCount === imageFiles.length) {
-          createParticles();
-          document.getElementById('loading').classList.add('hidden');
-          animate();
-        }
-      }
-    );
-  });
+            if (loadedCount === imagesData.total) {
+              createParticles();
+              document.getElementById('loading').classList.add('hidden');
+              animate();
+            }
+          },
+          undefined,
+          (error) => {
+            console.error('Failed to load:', imageInfo.filename, error);
+            loadedCount++;
+            if (loadedCount === imagesData.total) {
+              createParticles();
+              document.getElementById('loading').classList.add('hidden');
+              animate();
+            }
+          }
+        );
+      });
+    })
+    .catch(error => {
+      console.error('Failed to load images-data.json:', error);
+      document.getElementById('loading').innerHTML = '加载图片数据失败';
+    });
 
   // 添加辅助工具
   addHelpers();
