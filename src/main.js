@@ -12,6 +12,32 @@ let textures = [];
 let raycaster, mouse;
 let hoveredSprite = null;
 
+// 创建发光点纹理
+function createGlowTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  
+  const centerX = 32;
+  const centerY = 32;
+  const radius = 30;
+  
+  // 创建径向渐变
+  const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+  gradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.8)');
+  gradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.4)');
+  gradient.addColorStop(0.7, 'rgba(255, 255, 255, 0.1)');
+  gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 64, 64);
+  
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
+}
+
 init();
 
 function init() {
@@ -94,7 +120,7 @@ function addHelpers() {
   scene.add(axesHelper);
 
   // 网格辅助器 (地面网格 - 红色)
-  const gridHelper = new THREE.GridHelper(2000, 20, 0xff0000, 0x880000);
+  const gridHelper = new THREE.GridHelper(2000, 20, 0x880000, 0xffffff);
   scene.add(gridHelper);
 }
 
@@ -217,8 +243,11 @@ function createStarField() {
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
+  const glowTexture = createGlowTexture();
+  
   const material = new THREE.PointsMaterial({
-    size: 2,
+    size: 3,
+    map: glowTexture,
     vertexColors: true,
     transparent: true,
     opacity: 1,
@@ -285,10 +314,11 @@ function createStarField() {
   bgGeometry.setAttribute('color', new THREE.BufferAttribute(bgColors, 3));
   
   const bgMaterial = new THREE.PointsMaterial({
-    size: 1,
+    size: 2,
+    map: glowTexture,
     vertexColors: true,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.8,
     sizeAttenuation: true,
     blending: THREE.AdditiveBlending,
     depthWrite: false
