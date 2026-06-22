@@ -108,8 +108,10 @@ function init() {
       document.getElementById('loading').innerHTML = '加载图片数据失败';
     });
 
-  // 添加辅助工具
-  addHelpers();
+  // 添加辅助工具（仅开发环境）
+  if (process.env.NODE_ENV === 'development') {
+    addHelpers();
+  }
 
   // 创建宇宙星空背景
   createStarField();
