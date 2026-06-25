@@ -1,5 +1,10 @@
 import * as THREE from 'three';
-import {PHOTO_COUNT} from '../config/constants.js';
+import {
+  PHOTO_BORDER_LINE_WIDTH,
+  PHOTO_COUNT,
+  PHOTO_MATERIAL_OPACITY,
+  PHOTO_SPHERE_RADIUS
+} from '../config/constants.js';
 
 export function createPhotos(scene, textures, sprites) {
   for (let i = 0; i < PHOTO_COUNT; i++) {
@@ -13,7 +18,7 @@ export function createPhotos(scene, textures, sprites) {
     const material = new THREE.SpriteMaterial({
       map: texture,                           // 纹理贴图
       transparent: true,                      // 启用透明度
-      opacity: 0.85,                          // 不透明度 (0-1)
+      opacity: PHOTO_MATERIAL_OPACITY,        // 不透明度 (0-1)
       depthWrite: false,                      // 禁用深度写入，避免遮挡问题
       // blending: THREE.AdditiveBlending,       // 加法混合模式，产生发光效果
       sizeAttenuation: true                   // 根据距离缩放大小
@@ -23,7 +28,7 @@ export function createPhotos(scene, textures, sprites) {
     const sprite = new THREE.Sprite(material);
 
     // 球体分布：中心密集，边缘稀疏
-    const sphereRadius = 1000; // 球体半径
+    const sphereRadius = PHOTO_SPHERE_RADIUS; // 球体半径
     
     // 使用平方根分布，使中心密集
     // Math.random() 的平方根会产生更多接近0的值
@@ -58,7 +63,7 @@ export function createPhotos(scene, textures, sprites) {
     
     const borderMaterial = new THREE.LineBasicMaterial({
       color: 0x00ffff,
-      linewidth: 2,
+      linewidth: PHOTO_BORDER_LINE_WIDTH,
       transparent: true,
       opacity: 0
     });

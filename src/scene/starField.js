@@ -1,4 +1,13 @@
 import * as THREE from 'three';
+import {
+  BACKGROUND_STAR_COUNT,
+  BACKGROUND_STAR_OPACITY,
+  BACKGROUND_STAR_RADIUS_MIN,
+  BACKGROUND_STAR_RADIUS_RANDOM,
+  BACKGROUND_STAR_SIZE,
+  GALAXY_PARTICLE_COUNT,
+  GALAXY_RADIUS
+} from '../config/constants.js';
 
 // 创建发光点纹理
 function createGlowTexture() {
@@ -28,7 +37,7 @@ function createGlowTexture() {
 
 export function createStarField(scene) {
   // 创建扁平椭圆星系效果
-  const totalParticles = 100000;
+  const totalParticles = GALAXY_PARTICLE_COUNT;
   const geometry = new THREE.BufferGeometry();
   const positions = new Float32Array(totalParticles * 3);
   const colors = new Float32Array(totalParticles * 3);
@@ -39,7 +48,7 @@ export function createStarField(scene) {
     
     // 使用指数分布，中心密集
     const radiusRandom = Math.pow(Math.random(), 0.3);
-    const radius = radiusRandom * 2500;
+    const radius = radiusRandom * GALAXY_RADIUS;
     
     // 水平角度
     const theta = Math.random() * Math.PI * 2;
@@ -58,7 +67,7 @@ export function createStarField(scene) {
     
     // 根据距离中心的距离决定颜色和亮度
     const distanceFromCenter = Math.sqrt(x * x + y * y + z * z);
-    const normalizedDistance = distanceFromCenter / 2500;
+    const normalizedDistance = distanceFromCenter / GALAXY_RADIUS;
     
     // 五颜六色的彩色效果
     let r, g, b, size, opacity;
@@ -162,14 +171,14 @@ export function createStarField(scene) {
   scene.add(galaxy);
   
   // 添加额外的背景星星
-  const bgStarCount = 3000;
+  const bgStarCount = BACKGROUND_STAR_COUNT;
   const bgGeometry = new THREE.BufferGeometry();
   const bgPositions = new Float32Array(bgStarCount * 3);
   const bgColors = new Float32Array(bgStarCount * 3);
   
   for (let i = 0; i < bgStarCount; i++) {
     const i3 = i * 3;
-    const radius = 2000 + Math.random() * 1500;
+    const radius = BACKGROUND_STAR_RADIUS_MIN + Math.random() * BACKGROUND_STAR_RADIUS_RANDOM;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
     
@@ -216,11 +225,11 @@ export function createStarField(scene) {
   bgGeometry.setAttribute('color', new THREE.BufferAttribute(bgColors, 3));
   
   const bgMaterial = new THREE.PointsMaterial({
-    size: 2,
+    size: BACKGROUND_STAR_SIZE,
     map: glowTexture,
     vertexColors: true,
     transparent: true,
-    opacity: 0.8,
+    opacity: BACKGROUND_STAR_OPACITY,
     sizeAttenuation: true,
     blending: THREE.AdditiveBlending,
     depthWrite: false

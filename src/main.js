@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import gsap from 'gsap';
+import {PHOTO_MATERIAL_OPACITY} from './config/constants.js';
 import {addHelpers} from './scene/helpers.js';
 import {createStarField} from './scene/starField.js';
 import {createPhotos} from './scene/photos.js';
@@ -127,7 +128,7 @@ function onMouseMove(event) {
     if (newHovered !== hoveredSprite) {
       // 恢复之前悬停的精灵（跳过当前点击的精灵）
       if (hoveredSprite && hoveredSprite !== clickedSprite) {
-        hoveredSprite.material.opacity = 0.85;
+        hoveredSprite.material.opacity = PHOTO_MATERIAL_OPACITY;
 
         // 隐藏边框线
         if (hoveredSprite.userData.borderLine) {
@@ -152,7 +153,7 @@ function onMouseMove(event) {
   } else {
     // 鼠标离开所有精灵，恢复之前悬停的精灵（跳过当前点击的精灵）
     if (hoveredSprite && hoveredSprite !== clickedSprite) {
-      hoveredSprite.material.opacity = 0.85;
+      hoveredSprite.material.opacity = PHOTO_MATERIAL_OPACITY;
 
       // 隐藏边框线
       if (hoveredSprite.userData.borderLine) {
@@ -180,7 +181,7 @@ function onMouseClick(event) {
 
     // 恢复之前点击的精灵
     if (clickedSprite && clickedSprite !== newClicked) {
-      clickedSprite.material.opacity = 0.85;
+      clickedSprite.material.opacity = PHOTO_MATERIAL_OPACITY;
       if (clickedSprite.userData.borderLine) {
         clickedSprite.userData.borderLine.material.opacity = 0;
       }
@@ -237,7 +238,7 @@ function animateCameraTo(targetPosition) {
       // 监听用户主动操作控制器时，恢复点击的精灵和自动旋转
       const resetClicked = () => {
         if (clickedSprite) {
-          clickedSprite.material.opacity = 0.85;
+          clickedSprite.material.opacity = PHOTO_MATERIAL_OPACITY;
           if (clickedSprite.userData.borderLine) {
             clickedSprite.userData.borderLine.material.opacity = 0;
           }
