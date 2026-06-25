@@ -11,13 +11,13 @@ export const PHOTO_MATERIAL_OPACITY = 0.85;
 export const PHOTO_BORDER_LINE_WIDTH = 2;
 
 // 坐标轴辅助器尺寸
-export const AXES_HELPER_SIZE = 10000;
+export const AXES_HELPER_SIZE = 1100;
 
 // 网格辅助器尺寸
 export const GRID_HELPER_SIZE = 2000;
 
 // 网格辅助器分段数
-export const GRID_HELPER_DIVISIONS = 20;
+export const GRID_HELPER_DIVISIONS = 50;
 
 // 网格中心线颜色
 export const GRID_HELPER_CENTER_COLOR = 0x880000;
