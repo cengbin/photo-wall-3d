@@ -1,1 +1,1 @@
-export const PARTICLE_COUNT = 1500;
+export const PHOTO_COUNT = 1500;

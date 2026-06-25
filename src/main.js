@@ -3,7 +3,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import gsap from 'gsap';
 import {addHelpers} from './scene/helpers.js';
 import {createStarField} from './scene/starField.js';
-import {createParticles} from './scene/particles.js';
+import {createPhotos} from './scene/photos.js';
 
 
 let scene, camera, renderer, controls;
@@ -63,7 +63,7 @@ function init() {
             loadedCount++;
 
             if (loadedCount === imagesData.total) {
-              createParticles(scene, textures, sprites);
+              createPhotos(scene, textures, sprites);
               document.getElementById('loading').classList.add('hidden');
               animate();
             }
@@ -73,7 +73,7 @@ function init() {
             console.error('Failed to load:', imageInfo.filename, error);
             loadedCount++;
             if (loadedCount === imagesData.total) {
-              createParticles(scene, textures, sprites);
+              createPhotos(scene, textures, sprites);
               document.getElementById('loading').classList.add('hidden');
               animate();
             }

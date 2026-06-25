@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { PARTICLE_COUNT } from '../config/constants.js';
+import {PHOTO_COUNT} from '../config/constants.js';
 
-export function createParticles(scene, textures, sprites) {
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
+export function createPhotos(scene, textures, sprites) {
+  for (let i = 0; i < PHOTO_COUNT; i++) {
     // 随机选择一张图片
     const textureIndex = Math.floor(Math.random() * textures.length);
     const texture = textures[textureIndex];
