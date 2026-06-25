@@ -29,7 +29,7 @@ export const GRID_HELPER_GRID_COLOR = 0xffffff;
 export const GALAXY_PARTICLE_COUNT = 100000;
 
 // 星系分布半径
-export const GALAXY_RADIUS = 2500;
+export const GALAXY_RADIUS = 2000;
 
 // 背景星星数量
 export const BACKGROUND_STAR_COUNT = 3000;
