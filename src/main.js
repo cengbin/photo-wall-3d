@@ -3,7 +3,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import gsap from 'gsap';
 import {PHOTO_MATERIAL_OPACITY} from './config/constants.js';
 import {addHelpers} from './scene/helpers.js';
-import {createStarField} from './scene/starField.js';
+import {createUniverse} from './scene/universe.js';
 import {createPhotos} from './scene/photos.js';
 
 
@@ -93,7 +93,7 @@ function init() {
   }
 
   // 创建宇宙星空背景
-  createStarField(scene);
+  createUniverse(scene);
 
   // 初始化射线投射器和鼠标向量
   raycaster = new THREE.Raycaster();

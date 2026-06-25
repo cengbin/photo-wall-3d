@@ -35,7 +35,7 @@ function createGlowTexture() {
   return texture;
 }
 
-export function createStarField(scene) {
+function createEllipticalGalaxy(scene, glowTexture) {
   // 创建扁平椭圆星系效果
   const totalParticles = GALAXY_PARTICLE_COUNT;
   const geometry = new THREE.BufferGeometry();
@@ -153,8 +153,6 @@ export function createStarField(scene) {
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-  const glowTexture = createGlowTexture();
   
   const material = new THREE.PointsMaterial({
     size: 3,
@@ -169,7 +167,9 @@ export function createStarField(scene) {
 
   const galaxy = new THREE.Points(geometry, material);
   scene.add(galaxy);
-  
+}
+
+function createBackgroundStars(scene, glowTexture) {
   // 添加额外的背景星星
   const bgStarCount = BACKGROUND_STAR_COUNT;
   const bgGeometry = new THREE.BufferGeometry();
@@ -237,4 +237,11 @@ export function createStarField(scene) {
   
   const bgStars = new THREE.Points(bgGeometry, bgMaterial);
   scene.add(bgStars);
+}
+
+export function createUniverse(scene) {
+  const glowTexture = createGlowTexture();
+
+  createEllipticalGalaxy(scene, glowTexture);
+  createBackgroundStars(scene, glowTexture);
 }
