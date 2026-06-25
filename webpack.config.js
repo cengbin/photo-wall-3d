@@ -11,7 +11,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './index.html',
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -24,7 +24,7 @@ module.exports = {
       directory: path.resolve(__dirname),
     },
     port: 8083,
-    open: true,
+    open: false,
     hot: true,
   },
 };
