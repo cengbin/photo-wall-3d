@@ -1,8 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const imagesDir = path.join(__dirname, 'resource', 'images');
-const resourceDir = path.join(__dirname, 'resource');
+const resourceDir = path.resolve(__dirname, '..');
+const imagesDir = __dirname;
+
+function formatDateTime(date) {
+  const pad = (value) => String(value).padStart(2, '0');
+
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
 
 // 读取所有图片文件
 const files = fs.readdirSync(imagesDir)
@@ -10,7 +16,7 @@ const files = fs.readdirSync(imagesDir)
     const ext = path.extname(file).toLowerCase();
     return ['.png', '.jpg', '.jpeg', '.gif', '.webp'].includes(ext);
   })
-  .sort();
+  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
 console.log(`找到 ${files.length} 个图片文件`);
 
@@ -45,9 +51,6 @@ files.forEach((file, index) => {
   
   // 收集图片数据
   imagesData.push({
-    id: index + 1,
-    filename: newName,
-    originalName: file,
     path: `resource/images/${newName}`,
     size: stats.size,
     extension: ext.substring(1)
@@ -63,7 +66,7 @@ fs.rmdirSync(tempDir);
 const jsonData = {
   total: imagesData.length,
   images: imagesData,
-  generatedAt: new Date().toISOString()
+  generatedAt: formatDateTime(new Date())
 };
 
 const jsonPath = path.join(resourceDir, 'images-data.json');

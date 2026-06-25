@@ -2,85 +2,55 @@
   "total": 10,
   "images": [
     {
-      "id": 1,
-      "filename": "1.jpg",
-      "originalName": "1.jpg",
       "path": "resource/images/1.jpg",
       "size": 2589656,
       "extension": "jpg"
     },
     {
-      "id": 2,
-      "filename": "2.jpg",
-      "originalName": "10.jpg",
       "path": "resource/images/2.jpg",
       "size": 2671532,
       "extension": "jpg"
     },
     {
-      "id": 3,
-      "filename": "3.jpg",
-      "originalName": "2.jpg",
       "path": "resource/images/3.jpg",
       "size": 2644872,
       "extension": "jpg"
     },
     {
-      "id": 4,
-      "filename": "4.jpg",
-      "originalName": "3.jpg",
       "path": "resource/images/4.jpg",
       "size": 2093875,
       "extension": "jpg"
     },
     {
-      "id": 5,
-      "filename": "5.jpg",
-      "originalName": "4.jpg",
       "path": "resource/images/5.jpg",
       "size": 6452505,
       "extension": "jpg"
     },
     {
-      "id": 6,
-      "filename": "6.jpg",
-      "originalName": "5.jpg",
       "path": "resource/images/6.jpg",
       "size": 2506638,
       "extension": "jpg"
     },
     {
-      "id": 7,
-      "filename": "7.jpg",
-      "originalName": "7.jpg",
       "path": "resource/images/7.jpg",
       "size": 9686867,
       "extension": "jpg"
     },
     {
-      "id": 8,
-      "filename": "8.jpg",
-      "originalName": "8.jpg",
       "path": "resource/images/8.jpg",
       "size": 10013782,
       "extension": "jpg"
     },
     {
-      "id": 9,
-      "filename": "9.jpg",
-      "originalName": "9.jpg",
       "path": "resource/images/9.jpg",
       "size": 2140234,
       "extension": "jpg"
     },
     {
-      "id": 10,
-      "filename": "10.jpg",
-      "originalName": "微信图片_20260622145951_7449_582.jpg",
       "path": "resource/images/10.jpg",
       "size": 1815936,
       "extension": "jpg"
     }
   ],
-  "generatedAt": "2026-06-22T07:06:09.041Z"
+  "generatedAt": "2026-06-25 15:55:22"
 }
