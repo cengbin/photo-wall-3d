@@ -25,6 +25,7 @@ module.exports = {
     },
     port: 8083,
     open: false,
-    hot: true,
+    hot: false,
+    liveReload: false,
   },
 };
