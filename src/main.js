@@ -49,13 +49,14 @@ function init() {
     .then(response => response.json())
     .then(data => {
       imagesData = data;
-      console.log(`加载了 ${imagesData.total} 个图片信息`);
+      const imageList = imagesData.groups.flatMap(group => group.images);
+      console.log(`Loaded ${imagesData.totalImages} images.`);
 
       // 加载所有图片纹理
       const textureLoader = new THREE.TextureLoader();
       let loadedCount = 0;
 
-      imagesData.images.forEach((imageInfo, index) => {
+      imageList.forEach((imageInfo, index) => {
         textureLoader.load(
           imageInfo.path,
           (texture) => {
@@ -63,7 +64,7 @@ function init() {
             textures[index] = texture;
             loadedCount++;
 
-            if (loadedCount === imagesData.total) {
+            if (loadedCount === imagesData.totalImages) {
               createPhotos(scene, textures, sprites);
               document.getElementById('loading').classList.add('hidden');
               animate();
@@ -73,7 +74,7 @@ function init() {
           (error) => {
             console.error('Failed to load:', imageInfo.filename, error);
             loadedCount++;
-            if (loadedCount === imagesData.total) {
+            if (loadedCount === imagesData.totalImages) {
               createPhotos(scene, textures, sprites);
               document.getElementById('loading').classList.add('hidden');
               animate();

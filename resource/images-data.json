@@ -1,56 +1,130 @@
 {
-  "total": 10,
-  "images": [
+  "totalGroups": 3,
+  "totalImages": 17,
+  "groups": [
     {
-      "path": "resource/images/1.jpg",
-      "size": 2589656,
-      "extension": "jpg"
+      "time": "2025.09.18",
+      "title": "年度旅游 - 芒市",
+      "directory": "2025.09.18 年度旅游 - 芒市",
+      "images": [
+        {
+          "path": "resource/images/2025.09.18 年度旅游 - 芒市/微信图片_20251104162128_19_222.jpg",
+          "size": 465917,
+          "filename": "微信图片_20251104162128_19_222.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2025.09.18 年度旅游 - 芒市/微信图片_20251104162129_20_222.jpg",
+          "size": 266553,
+          "filename": "微信图片_20251104162129_20_222.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2025.09.18 年度旅游 - 芒市/微信图片_20251104162130_21_222.jpg",
+          "size": 350978,
+          "filename": "微信图片_20251104162130_21_222.jpg",
+          "extension": "jpg"
+        }
+      ]
     },
     {
-      "path": "resource/images/2.jpg",
-      "size": 2671532,
-      "extension": "jpg"
+      "time": "2026.05.17",
+      "title": "都江堰 - 紫坪铺水库",
+      "directory": "2026.05.17 都江堰 - 紫坪铺水库",
+      "images": [
+        {
+          "path": "resource/images/2026.05.17 都江堰 - 紫坪铺水库/截图20260626144155.png",
+          "size": 636611,
+          "filename": "截图20260626144155.png",
+          "extension": "png"
+        },
+        {
+          "path": "resource/images/2026.05.17 都江堰 - 紫坪铺水库/微信图片_20260517144715_3145_582.jpg",
+          "size": 14481564,
+          "filename": "微信图片_20260517144715_3145_582.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.05.17 都江堰 - 紫坪铺水库/微信图片_20260517144725_3146_582.jpg",
+          "size": 5707385,
+          "filename": "微信图片_20260517144725_3146_582.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.05.17 都江堰 - 紫坪铺水库/微信图片_20260517144728_3147_582.jpg",
+          "size": 2586180,
+          "filename": "微信图片_20260517144728_3147_582.jpg",
+          "extension": "jpg"
+        }
+      ]
     },
     {
-      "path": "resource/images/3.jpg",
-      "size": 2644872,
-      "extension": "jpg"
-    },
-    {
-      "path": "resource/images/4.jpg",
-      "size": 2093875,
-      "extension": "jpg"
-    },
-    {
-      "path": "resource/images/5.jpg",
-      "size": 6452505,
-      "extension": "jpg"
-    },
-    {
-      "path": "resource/images/6.jpg",
-      "size": 2506638,
-      "extension": "jpg"
-    },
-    {
-      "path": "resource/images/7.jpg",
-      "size": 9686867,
-      "extension": "jpg"
-    },
-    {
-      "path": "resource/images/8.jpg",
-      "size": 10013782,
-      "extension": "jpg"
-    },
-    {
-      "path": "resource/images/9.jpg",
-      "size": 2140234,
-      "extension": "jpg"
-    },
-    {
-      "path": "resource/images/10.jpg",
-      "size": 1815936,
-      "extension": "jpg"
+      "time": "2026.06.20",
+      "title": "汶川 - 阿尔沟",
+      "directory": "2026.06.20 汶川 - 阿尔沟",
+      "images": [
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/1.jpg",
+          "size": 2589656,
+          "filename": "1.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/2.jpg",
+          "size": 2671532,
+          "filename": "2.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/3.jpg",
+          "size": 2644872,
+          "filename": "3.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/4.jpg",
+          "size": 2093875,
+          "filename": "4.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/5.jpg",
+          "size": 6452505,
+          "filename": "5.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/6.jpg",
+          "size": 2506638,
+          "filename": "6.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/7.jpg",
+          "size": 9686867,
+          "filename": "7.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/8.jpg",
+          "size": 10013782,
+          "filename": "8.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/9.jpg",
+          "size": 2140234,
+          "filename": "9.jpg",
+          "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/10.jpg",
+          "size": 1815936,
+          "filename": "10.jpg",
+          "extension": "jpg"
+        }
+      ]
     }
   ],
-  "generatedAt": "2026-06-25 15:55:22"
+  "generatedAt": "2026-06-26 15:35:38"
 }
