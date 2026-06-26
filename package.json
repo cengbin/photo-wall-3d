@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "webpack serve --mode development",
     "build": "webpack --mode production",
-    "rename-images": "node scripts/rename-images.js",
+    "rename-images": "node scripts/rename-images.js resource/images/2026.06.20 汶川 - 阿尔沟",
     "generate-images-data": "node scripts/generate-image-data.js --output resource/images-data.json"
   },
   "author": "",

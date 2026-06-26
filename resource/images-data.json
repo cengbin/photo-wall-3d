@@ -88,12 +88,6 @@
           "extension": "jpg"
         },
         {
-          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/5.jpg",
-          "size": 6452505,
-          "filename": "5.jpg",
-          "extension": "jpg"
-        },
-        {
           "path": "resource/images/2026.06.20 汶川 - 阿尔沟/6.jpg",
           "size": 2506638,
           "filename": "6.jpg",
@@ -122,9 +116,15 @@
           "size": 1815936,
           "filename": "10.jpg",
           "extension": "jpg"
+        },
+        {
+          "path": "resource/images/2026.06.20 汶川 - 阿尔沟/谢谢谢谢.jpg",
+          "size": 6452505,
+          "filename": "谢谢谢谢.jpg",
+          "extension": "jpg"
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-26 15:35:38"
+  "generatedAt": "2026-06-26 15:41:13"
 }
