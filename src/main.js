@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import gsap from 'gsap';
-import {PHOTO_MATERIAL_OPACITY} from './config/constants.js';
+import {PHOTO_MATERIAL_OPACITY, PHOTO_SPHERE_RADIUS} from './config/constants.js';
 import {addHelpers} from './scene/helpers.js';
 import {createUniverse} from './scene/universe.js';
 import {createPhotos} from './scene/photos.js';
@@ -111,7 +111,29 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function isPhotoInteractionEnabled() {
+  return camera.position.length() <= PHOTO_SPHERE_RADIUS;
+}
+
+function resetHoveredSprite() {
+  if (hoveredSprite && hoveredSprite !== clickedSprite) {
+    hoveredSprite.material.opacity = PHOTO_MATERIAL_OPACITY;
+
+    if (hoveredSprite.userData.borderLine) {
+      hoveredSprite.userData.borderLine.material.opacity = 0;
+    }
+  }
+
+  hoveredSprite = null;
+  document.body.style.cursor = 'default';
+}
+
 function onMouseMove(event) {
+  if (!isPhotoInteractionEnabled()) {
+    resetHoveredSprite();
+    return;
+  }
+
   // 将鼠标位置转换为标准化设备坐标 (-1 到 +1)
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -168,6 +190,10 @@ function onMouseMove(event) {
 }
 
 function onMouseClick(event) {
+  if (!isPhotoInteractionEnabled()) {
+    return;
+  }
+
   // 将鼠标位置转换为标准化设备坐标
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
